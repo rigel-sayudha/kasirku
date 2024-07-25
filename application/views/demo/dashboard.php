@@ -8,7 +8,7 @@
     integrity="sha384-C6RzsynM9kWDrMNeT87bh95OGNyZPhcTNXj1NW7RuBCsyN/o0jlpcV8Qyq46cDfL" crossorigin="anonymous"></script>
     <script type="text/javascript"
             src="https://app.midtrans.com/snap/snap.js"
-            data-client-key="Mid-client-c39eZ1L0MihlJe7R"></script>
+            data-client-key="SB-Mid-client-d8K3zqYIV-38PwDk"></script>
     <script src="//ajax.googleapis.com/ajax/libs/jquery/1.11.0/jquery.min.js"></script>
     
    <!-- Google Font: Source Sans Pro -->
