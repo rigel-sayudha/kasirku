@@ -61,6 +61,22 @@ A simple PHP-based point-of-sale (POS) / cashier system.
 - Jika halaman blank: aktifkan error reporting di `index.php` atau cek log di folder `application/logs/`.
 - Koneksi DB gagal: periksa kembali kredensial di `application/config/database.php` dan pastikan database sudah diimport.
 
+Tambahan langkah pemeriksaan umum:
+
+- Aktifkan debugging sementara: set `display_errors` = On di `php.ini` dan nyalakan error reporting di `index.php` untuk menemukan pesan error selama development.
+- Periksa file log PHP/Apache (mis. `xampp\apache\logs\error.log`) dan `application/logs/` untuk trace stack atau pesan fatal.
+- Permission: pastikan folder `assets/upload/`, `application/cache/`, dan `application/logs/` dapat ditulis oleh webserver.
+- Masalah 500 / blank page: biasanya karena extension PHP hilang (mis. `mbstring`, `curl`) atau versi PHP tidak kompatibel.
+- Issue terkait pembayaran (Midtrans/Veritrans): periksa API keys di `application/libraries/` dan gunakan sandbox keys untuk pengujian.
+- Jika ada masalah dependency PHP: jalankan `composer install` di root project (jika menggunakan composer.json).
+- Jika Anda mendapatkan error terkait routing atau base URL, pastikan `base_url` di `application/config/config.php` diisi dengan tepat.
+
+Jika masih bermasalah, lampirkan:
+
+- Versi PHP dan ekstensi terpasang (`php -v` dan `php -m`).
+- Isi `application/config/database.php` (tanpa password) dan `application/config/config.php`.
+- Potongan pesan error dari `application/logs/` atau `xampp\apache\logs\error.log`.
+
 ## Contributing
 
 - Perbaikan atau fitur baru: buat branch, lakukan perubahan, dan buat pull request ke repository upstream jika Anda ingin berkontribusi.
