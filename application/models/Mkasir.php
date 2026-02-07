@@ -94,6 +94,3 @@ class Mkasir extends CI_Model {
 	}
 
 }
-
-/* End of file Transaksi_model.php */
-/* Location: ./application/models/Transaksi_model.php */
