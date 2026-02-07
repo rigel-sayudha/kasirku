@@ -13,13 +13,12 @@ class Transaksi extends CI_Controller {
             redirect('userpanel');
         }
         $id_user = $this->session->userdata('id_user');
-         // Memeriksa status pengguna
          $user_status = $this->Madmin->get_user_status($id_user);
 
          if ($user_status == 'Aktif') {
         $pelanggan = $this->Madmin->get_customer($id_user)->result();
         $barang = $this->Madmin->get_barang_category($id_user)->result();
-        $cart = $this->Madmin->get_cart(null, $id_user);
+        $cart = $this->Madmin->get_cart($id_user, null);
         $data = array(
             'pelanggan' => $pelanggan,
             'barang' => $barang,
@@ -43,26 +42,50 @@ class Transaksi extends CI_Controller {
 
     public function proses() {
         $data = $this->input->post(null, TRUE);
-    
-        log_message('debug', 'proses function called'); // Logging masuk ke fungsi
-        log_message('debug', 'Received data: ' . print_r($data, true)); // Logging data yang diterima
-    
+
         if(isset($data['add_cart'])) {
-            log_message('debug', 'add_cart set'); // Logging jika add_cart diset
-    
-            $this->Madmin->add_cart($data);
-            if($this->db->affected_rows() > 0) {
-                $params = array("success" => true);
-            } else {
-                $params = array("success" => false);
+        
+            if(!isset($data['id_barang']) || !isset($data['harga']) || !isset($data['qty'])) {
+                $params = array(
+                    "success" => false,
+                    "message" => "Data tidak lengkap"
+                );
+                echo json_encode($params);
+                return;
+            }
+
+          
+            $data['harga'] = str_replace('Rp ', '', $data['harga']);
+            $data['harga'] = str_replace('.', '', $data['harga']);
+            $data['harga'] = (float) $data['harga'];
+            $data['qty'] = (int) $data['qty'];
+
+            try {
+                $this->Madmin->add_cart($data);
+                if($this->db->affected_rows() > 0) {
+                    $params = array(
+                        "success" => true,
+                        "message" => "Berhasil menambahkan ke keranjang"
+                    );
+                } else {
+                    $params = array(
+                        "success" => false,
+                        "message" => "Gagal menambahkan ke keranjang"
+                    );
+                }
+            } catch(Exception $e) {
+                $params = array(
+                    "success" => false,
+                    "message" => "Error: " . $e->getMessage()
+                );
             }
             echo json_encode($params);
         } else {
-            log_message('debug', 'add_cart not set'); // Logging jika add_cart tidak diset
+            log_message('debug', 'add_cart not set'); 
         }
     
         if(isset($data['process_payment'])) {
-            log_message('debug', 'process_payment set'); // Logging jika process_payment diset
+            log_message('debug', 'process_payment set'); 
     
             $id_transaksi = $this->Madmin->add_sale($data);
             $cart = $this->Madmin->get_cart()->result();
@@ -117,9 +140,9 @@ class Transaksi extends CI_Controller {
 
     function cart_data(){
         $id_user = $this->session->userdata('id_user');
-        $cart = $this->Madmin->get_cart(null, $id_user);
+        $cart = $this->Madmin->get_cart($id_user, null);
         $data['cart'] = $cart;
-        $this->load->view('user/kasir/cart_data',$data);
+        $this->load->view('user/kasir/cart_data', $data);
     }
 
     public function delete($id_cart, $params = null) {

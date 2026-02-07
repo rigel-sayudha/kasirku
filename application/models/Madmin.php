@@ -34,13 +34,13 @@
         public function get_user_status($id_user) {
             $this->db->select('status');
             $this->db->where('id_user', $id_user);
-            $query = $this->db->get('user'); // Sesuaikan dengan nama tabel Anda
+            $query = $this->db->get('user'); 
     
             if ($query->num_rows() > 0) {
                 $result = $query->row();
                 return $result->status;
             } else {
-                return null; // atau sesuaikan dengan logika aplikasi Anda
+                return null; 
             }
         }
         public function get_by_id($tabel, $field_id, $id)
@@ -82,7 +82,7 @@
 
         public function updateStatusBasedOnTransaction()
         {
-            // Ambil data transaksi dari tabel transaksi_midtrans dengan status_code '201' beserta data user terkait
+
             $transactions = $this->db
                 ->select('transaksi_midtrans.id_user, transaksi_midtrans.status_code')
                 ->where('transaksi_midtrans.status_code', '200')
@@ -91,7 +91,7 @@
                 ->result();
         
             foreach ($transactions as $transaction) {
-                // Ambil id_user dan status_code dari data transaksi
+
                 $id_user = $transaction->id_user;
                 $status_code = $transaction->status_code;
         
@@ -123,7 +123,7 @@
             $query = $this->db->get();
             return $query;
         }
-        //Mengambil count data dari database
+
         public function get_barang_kategori_count() {
             return $this->db->count_all_results('barang');
         }
@@ -153,7 +153,7 @@
         }
         public function isBarcodeExistForUpdate($id, $barcode) {
             $this->db->where('barcode', $barcode);
-            $this->db->where('id_barang !=', $id); // Mengecualikan barang dengan ID yang sedang diperbarui
+            $this->db->where('id_barang !=', $id); 
             $query = $this->db->get('barang');
         
             return $query->num_rows() > 0;
@@ -282,11 +282,10 @@
             $this->db->where('id_transaksi', $invoice_id);
             $query = $this->db->get('transaksi');
         
-            // Check if the query was successful
             if ($query->num_rows() > 0) {
-                return $query->row(); // Return a single row of the result
+                return $query->row(); 
             } else {
-                return false; // Return false if no data is found
+                return false; 
             }
         }
         public function get_user_data($user_id) {
@@ -296,7 +295,7 @@
             if ($query->num_rows() > 0) {
                 return $query->row_array();
             } else {
-                return array(); // Return array kosong jika pengguna tidak ditemukan
+                return array(); 
             }
         }
 
@@ -355,7 +354,8 @@
             return $invoice;
         }
 
-            public function add_cart($post) {    
+            public function add_cart($post) {
+  
                 $query = $this->db->query("SELECT MAX(id_cart) AS no_cart FROM cart");
                 if ($query->num_rows() > 0) {
                     $row = $query->row();
@@ -370,17 +370,10 @@
                     'harga' => $post['harga'],
                     'qty' => $post['qty'],
                     'total' => ($post['harga'] * $post['qty']),
-                    'id_user' => $this->session->userdata('id_user'),
+                    'id_user' => $this->session->userdata('id_user')
                 );
         
-                log_message('debug', 'Insert parameters: ' . print_r($params, true)); // Logging parameter insert
-                $this->db->insert('cart', $params);
-        
-                if ($this->db->affected_rows() > 0) {
-                    log_message('debug', 'Data inserted successfully'); // Logging sukses
-                } else {
-                    log_message('error', 'Failed to insert data'); // Logging gagal
-                }
+                return $this->db->insert('cart', $params);
             }
         
         
@@ -401,11 +394,11 @@
             }
             $this->db->delete('cart');
         }
-        public function get_cart($id_user, $params = null){
-            $this->db->select('*','barang.nama_barang as barang_nama, cart.harga as cart_harga');
+        public function get_cart($id_user, $params = null) {
+            $this->db->select('cart.*, barang.nama_barang, barang.barcode');
             $this->db->from('cart');
             $this->db->join('barang', 'cart.id_barang = barang.id_barang');
-            $this->db->where('cart.id_user', $id_user); 
+            $this->db->where('cart.id_user', $id_user);
             if($params != null) {
                 $this->db->where($params);
             }
