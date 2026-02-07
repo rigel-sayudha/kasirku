@@ -77,14 +77,14 @@ class Barang extends CI_Controller {
         $style_col = [
         'font' => ['bold' => true], // Set font nya jadi bold
         'alignment' => [
-            'horizontal' => \PhpOffice\PhpSpreadsheet\Style\Alignment::HORIZONTAL_CENTER, // Set text jadi ditengah secara horizontal (center)
-            'vertical' => \PhpOffice\PhpSpreadsheet\Style\Alignment::VERTICAL_CENTER // Set text jadi di tengah secara vertical (middle)
+            'horizontal' => \PhpOffice\PhpSpreadsheet\Style\Alignment::HORIZONTAL_CENTER, 
+            'vertical' => \PhpOffice\PhpSpreadsheet\Style\Alignment::VERTICAL_CENTER 
         ],
         'borders' => [
-            'top' => ['borderStyle'  => \PhpOffice\PhpSpreadsheet\Style\Border::BORDER_THIN], // Set border top dengan garis tipis
-            'right' => ['borderStyle'  => \PhpOffice\PhpSpreadsheet\Style\Border::BORDER_THIN],  // Set border right dengan garis tipis
-            'bottom' => ['borderStyle'  => \PhpOffice\PhpSpreadsheet\Style\Border::BORDER_THIN], // Set border bottom dengan garis tipis
-            'left' => ['borderStyle'  => \PhpOffice\PhpSpreadsheet\Style\Border::BORDER_THIN] // Set border left dengan garis tipis
+            'top' => ['borderStyle'  => \PhpOffice\PhpSpreadsheet\Style\Border::BORDER_THIN], 
+            'right' => ['borderStyle'  => \PhpOffice\PhpSpreadsheet\Style\Border::BORDER_THIN],  
+            'bottom' => ['borderStyle'  => \PhpOffice\PhpSpreadsheet\Style\Border::BORDER_THIN], 
+            'left' => ['borderStyle'  => \PhpOffice\PhpSpreadsheet\Style\Border::BORDER_THIN] 
         ]
         ];
         // Buat sebuah variabel untuk menampung pengaturan style dari isi tabel
@@ -118,12 +118,12 @@ class Barang extends CI_Controller {
         $data = $this->Madmin->get_barang_kategori();
         $no = 1; // Untuk penomoran tabel, di awal set dengan 1
         $numrow = 4; // Set baris pertama untuk isi tabel adalah baris ke 4
-        foreach($siswa as $data){ // Lakukan looping pada variabel siswa
+        foreach($data as $item){ // Lakukan looping pada variabel data
         $sheet->setCellValue('A'.$numrow, $no);
-        $sheet->setCellValue('B'.$numrow, $data->nama_barang);
-        $sheet->setCellValue('C'.$numrow, $data->nama_kategori);
-        $sheet->setCellValue('D'.$numrow, $data->harga);
-        $sheet->setCellValue('E'.$numrow, $data->stok);
+        $sheet->setCellValue('B'.$numrow, $item->nama_barang);
+        $sheet->setCellValue('C'.$numrow, $item->nama_kategori);
+        $sheet->setCellValue('D'.$numrow, $item->harga);
+        $sheet->setCellValue('E'.$numrow, $item->stok);
         
         // Apply style row yang telah kita buat tadi ke masing-masing baris (isi tabel)
         $sheet->getStyle('A'.$numrow)->applyFromArray($style_row);
@@ -172,66 +172,70 @@ class Barang extends CI_Controller {
                 <button type="button" class="close" data-dismiss="alert" aria-hidden="true">x</button>
                 <h6><i> Data barang tidak valid! </i></h6>
             </div>');
-        } else {
-            $id_user = $this->session->userdata('id_user');
-            $barcode = $this->input->post('barcode');
-    
-            // Validasi apakah barcode sudah digunakan untuk barang lain
-                $isBarcodeExist = $this->Madmin->isBarcodeExistForUpdate($id, $barcode);
-            
-                if ($isBarcodeExist) {
-                    // Jika barcode sudah digunakan, tampilkan pesan kesalahan
-                    $this->session->set_flashdata('massage', '<div class="alert alert-danger alert-dismissible">
-                        <button type="button" class="close" data-dismiss="alert" aria-hidden="true">x</button>
-                        <h6><i>Barcode sudah digunakan! </i></h6>
-                    </div>');
-                } else {
-                // Barcode belum digunakan, lanjutkan proses penyimpanan
-                $config['upload_path'] = FCPATH . 'assets/upload/'; // Sesuaikan dengan direktori upload Anda
-                $config['allowed_types'] = 'jpeg|jpg|png';
-                $config['max_size'] = 4096; // Ukuran maksimal file dalam kilobita
+            redirect('barang');
+            return;
+        } 
         
-                $this->load->library('upload', $config);
-    
-                if ($this->upload->do_upload('foto')) {
-                    // Jika upload berhasil, ambil data file
-                    $upload_data = $this->upload->data();
-                    $foto = $upload_data['file_name'];
-    
-                    $data = array(
-                        'barcode' => $barcode,
-                        'nama_barang' => $this->input->post('nama_barang'),
-                        'harga' => $this->input->post('harga'),
-                        'id_kategori' => $this->input->post('id_kategori'),
-                        'stok' => $this->input->post('stok'),
-                        'foto' => $foto,
-                        'id_user' => $this->input->post('id_user'),
-                    );
-    
-                    $result = $this->Madmin->insert('barang', $data);
-    
-                    if ($result) {
-                        $this->session->set_flashdata('massage', '<div class="alert alert-success alert-dismissible">
-                            <button type="button" class="close" data-dismiss="alert" aria-hidden="true">x</button>
-                            <h6><i> Barang berhasil ditambahkan! </i></h6>
-                        </div>');
-                    } else {
-                        $this->session->set_flashdata('massage', '<div class="alert alert-success alert-dismissible">
-                        <button type="button" class="close" data-dismiss="alert" aria-hidden="true">x</button>
-                        <h6><i> Barang berhasil ditambahkan! </i></h6>
-                    </div>');
-                    }
-                } else {
-                    // Jika upload gagal, tampilkan pesan kesalahan
-                    $error = $this->upload->display_errors();
-                    $this->session->set_flashdata('massage', '<div class="alert alert-danger alert-dismissible">
-                        <button type="button" class="close" data-dismiss="alert" aria-hidden="true">x</button>
-                        <h6><i>' . $error . '</i></h6>
-                    </div>');
-                }
-            }
+        $id_user = $this->session->userdata('id_user');
+        $barcode = $this->input->post('barcode');
+
+        // Validasi apakah barcode sudah digunakan untuk barang baru
+        $isBarcodeExist = $this->Madmin->isBarcodeExist($barcode, $id_user);
+        
+        if ($isBarcodeExist) {
+            // Jika barcode sudah digunakan, tampilkan pesan kesalahan
+            $this->session->set_flashdata('massage', '<div class="alert alert-danger alert-dismissible">
+                <button type="button" class="close" data-dismiss="alert" aria-hidden="true">x</button>
+                <h6><i>Barcode sudah digunakan! </i></h6>
+            </div>');
+            redirect('barang');
+            return;
         }
-    
+        
+        // Barcode belum digunakan, lanjutkan proses penyimpanan
+        $config['upload_path'] = FCPATH . 'assets/upload/'; // Sesuaikan dengan direktori upload Anda
+        $config['allowed_types'] = 'jpeg|jpg|png';
+        $config['max_size'] = 4096; // Ukuran maksimal file dalam kilobita
+
+        $this->load->library('upload', $config);
+
+        if ($this->upload->do_upload('foto')) {
+            // Jika upload berhasil, ambil data file
+            $upload_data = $this->upload->data();
+            $foto = $upload_data['file_name'];
+
+            $data = array(
+                'barcode' => $barcode,
+                'nama_barang' => $this->input->post('nama_barang'),
+                'harga' => $this->input->post('harga'),
+                'id_kategori' => $this->input->post('id_kategori'),
+                'stok' => $this->input->post('stok'),
+                'foto' => $foto,
+                'id_user' => $id_user,
+            );
+
+            $result = $this->Madmin->insert('barang', $data);
+
+            if ($result) {
+                $this->session->set_flashdata('massage', '<div class="alert alert-success alert-dismissible">
+                    <button type="button" class="close" data-dismiss="alert" aria-hidden="true">x</button>
+                    <h6><i> Barang berhasil ditambahkan! </i></h6>
+                </div>');
+            } else {
+                $this->session->set_flashdata('massage', '<div class="alert alert-danger alert-dismissible">
+                <button type="button" class="close" data-dismiss="alert" aria-hidden="true">x</button>
+                <h6><i> Gagal menambahkan barang! </i></h6>
+            </div>');
+            }
+        } else {
+            // Jika upload gagal, tampilkan pesan kesalahan
+            $error = $this->upload->display_errors();
+            $this->session->set_flashdata('massage', '<div class="alert alert-danger alert-dismissible">
+                <button type="button" class="close" data-dismiss="alert" aria-hidden="true">x</button>
+                <h6><i>' . $error . '</i></h6>
+            </div>');
+        }
+
         redirect('barang');
     }
     public function update(){

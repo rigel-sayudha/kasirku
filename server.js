@@ -1,4 +1,4 @@
-﻿const express = require('express');
+const express = require('express');
 const bodyParser = require('body-parser');
 const { Configuration, OpenAIApi } = require('openai');
 
@@ -8,9 +8,9 @@ const port = 3000;
 app.use(bodyParser.json());
 app.use('/kasirku', express.static('public')); // Untuk melayani file statis dari folder 'public'
 
-// Ganti dengan API key OpenAI Anda
+// Use environment variable for API key; fallback removed for security
 const configuration = new Configuration({
-    apiKey: 'REDACTED_OPENAI_KEY',
+    apiKey: process.env.OPENAI_API_KEY || 'REDACTED_OPENAI_KEY',
 });
 const openai = new OpenAIApi(configuration);
 

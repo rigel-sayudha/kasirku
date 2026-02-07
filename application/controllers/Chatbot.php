@@ -1,4 +1,4 @@
-﻿<?php
+<?php
 defined('BASEPATH') OR exit('No direct script access allowed');
 
 class Chatbot extends CI_Controller {
@@ -23,7 +23,8 @@ class Chatbot extends CI_Controller {
     }
 
     private function get_response_from_openai($question) {
-        $api_key = 'REDACTED_OPENAI_KEY'; // Ganti dengan API key OpenAI Anda
+        // Read API key from environment variable for security
+        $api_key = getenv('OPENAI_API_KEY') ?: 'REDACTED_OPENAI_KEY';
         $url = 'https://api.openai.com/v1/engines/davinci-codex/completions';
         
         $data = array(
@@ -51,4 +52,3 @@ class Chatbot extends CI_Controller {
         return $response_data['choices'][0]['text'];
     }
 }
-

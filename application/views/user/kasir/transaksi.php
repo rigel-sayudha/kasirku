@@ -313,12 +313,10 @@ function showDeleteConfirmation(event) {
     });
 
     $(document).on('click', '#add_cart', function() {
-        var id_barang = $('#id_barang').val();
-        var harga = $('#harga').val();
-        var stok = $('#stok').val();
-        var qty = $('#qty').val();
-        
-        console.log('Add Cart button clicked');
+        var id_barang = $('#id_barang').val()
+        var harga = $('#harga').val()
+        var stok = $('#stok').val()
+        var qty = $('#qty').val()
         
         if (id_barang == '') {
             Swal.fire({
@@ -339,35 +337,35 @@ function showDeleteConfirmation(event) {
         } else {
             $.ajax({
                 type: 'POST',
-                url: '<?=site_url('transaksi/proses');?>',
+                url: '<?=site_url('transaksi/proses')?>',
                 data: {
                     'add_cart': true,
                     'id_barang': id_barang,
                     'harga': harga,
                     'qty': qty
                 },
-                dataType: 'JSON', 
-                success: function(result) {
-                    console.log(result); 
-                    if (result.success) {
-                        $('#cart_table').load('<?=site_url('transaksi/cart_data')?>', function() {
-                            window.location.reload();
+                dataType: 'json',
+                success: function(response) {
+                    if (response.success) {
+                        $.get('<?=site_url('transaksi/cart_data')?>', function(cartHtml) {
+                            $('#cart_table').html(cartHtml);
+                            calculate();
+                            Swal.fire({
+                                icon: 'success',
+                                title: 'Sukses',
+                                text: response.message,
+                                showConfirmButton: false,
+                                timer: 1500
+                            }).then(() => {
+                                location.reload(); 
+                            });
                         });
                     } else {
-                        Swal.fire({
-                            icon: 'error',
-                            title: 'Oops...',
-                            text: 'Gagal tambah item cart',
-                        });
+                        Swal.fire('Error', response.message, 'error');
                     }
                 },
                 error: function(xhr, status, error) {
-                    console.error('AJAX error', status, error); 
-                    Swal.fire({
-                        icon: 'error',
-                        title: 'Oops...',
-                        text: 'Terjadi kesalahan pada server!',
-                    });
+                    Swal.fire('Error', 'Terjadi kesalahan: ' + error, 'error');
                 }
             });
         }
@@ -549,7 +547,7 @@ function showDeleteConfirmation(event) {
                             text: 'Semua item dari keranjang dihapus.',
                         }).then((result) => {
                             if (result.isConfirmed) {
-                                location.reload(); // Refresh halaman setelah reset
+                                location.reload();
                             }
                         });
                     } else {

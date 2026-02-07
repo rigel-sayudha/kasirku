@@ -3,28 +3,27 @@
 <!-- SweetAlert2 JS -->
 <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 <?php $no = 1;
-                  if($cart->num_rows() > 0) {
-                    foreach ($cart->result() as $c =>$data) { ?>
-                      <tr>
-                        <td><?=$no++?>.</td>
-                        <td><?=$data->barcode?></td>
-                        <td><?=$data->nama_barang?></td>
-                        <td class="text-right"><?= $data->harga?></td>
-                        <td class="text-center"><?= $data->qty?></td>
-                        <td class="text-right" id="total"><?= ($data->harga * $data->qty) ?></td>
-                        <td class="text-center" width="160px">               
-                        <a href="#" onclick="confirmDelete('<?php echo site_url('transaksi/delete/'.$data->id_cart); ?>')" class="btn-sm btn-danger">
-                            <i class="fa fa-trash"></i>&nbsp;Hapus
-                        </a>
-                        </td>
-                      </tr>
-                    <?php
-                    }
-                  } else {
-                    echo '<tr>
-                        <td colspan="8" class="text-center">Tidak ada Item</td>
-                        </tr>';
-                  } ?>
+if($cart->num_rows() > 0) {
+    foreach ($cart->result() as $c => $data) { ?>
+        <tr>
+            <td><?=$no++?>.</td>
+            <td><?=$data->barcode?></td>
+            <td><?=$data->nama_barang?></td>
+            <td class="text-right"><?=number_format($data->harga)?></td>
+            <td class="text-center"><?=$data->qty?></td>
+            <td class="text-right" id="total"><?=number_format($data->total)?></td>
+            <td class="text-center" width="160px">               
+                <a href="#" onclick="confirmDelete('<?=site_url('transaksi/delete/'.$data->id_cart)?>')" class="btn btn-danger btn-sm">
+                    <i class="fa fa-trash"></i> Hapus
+                </a>
+            </td>
+        </tr>
+    <?php }
+} else {
+    echo '<tr>
+            <td colspan="7" class="text-center">Tidak ada item</td>
+          </tr>';
+} ?>
        <script>
           function confirmDelete(deleteUrl) {
               Swal.fire({

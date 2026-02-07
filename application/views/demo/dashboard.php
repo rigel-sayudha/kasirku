@@ -21,14 +21,13 @@
   <link rel="stylesheet" href="<?php echo base_url('assets/admin/dist/css/adminlte.min.css');?>">
   <style>
   .card {
-    max-width: 400px; /* Sesuaikan lebar sesuai keinginan */
+    max-width: 400px; 
     max-height: 800px; 
-    margin: 0 auto; /* Membuat card berada di tengah halaman */
+    margin: 0 auto; 
   }
 </style>
 </head>
 <body class="hold-transition sidebar-mini layout-fixed">
-  <!-- Content Wrapper. Contains page content -->
   <div class="content-wrapper">
     <!-- Content Header (Page header) -->
     <div class="content-header">

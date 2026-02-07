@@ -465,12 +465,12 @@
             chatPopup.classList.remove("show");
             setTimeout(function() {
                 chatPopup.style.display = "none";
-            }, 300); // Sesuaikan dengan durasi animasi
+            }, 300); 
         } else {
             chatPopup.style.display = "block";
             setTimeout(function() {
                 chatPopup.classList.add("show");
-            }, 10); // Delay sedikit agar animasi berjalan
+            }, 10); 
             showInitialMessage();
         }
     }
