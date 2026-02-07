@@ -11,7 +11,11 @@ if($cart->num_rows() > 0) {
             <td><?=$data->nama_barang?></td>
             <td class="text-right"><?=number_format($data->harga)?></td>
             <td class="text-center"><?=$data->qty?></td>
+<<<<<<< HEAD
             <td class="text-right" id="total"><?=number_format($data->total)?></td>
+=======
+            <td class="text-right total" data-total="<?=$data->total?>"><?=number_format($data->total)?></td>
+>>>>>>> 36d7307 (fix: update project files, bug fixes, and compatibility improvements for PHP 8.2)
             <td class="text-center" width="160px">               
                 <a href="#" onclick="confirmDelete('<?=site_url('transaksi/delete/'.$data->id_cart)?>')" class="btn btn-danger btn-sm">
                     <i class="fa fa-trash"></i> Hapus

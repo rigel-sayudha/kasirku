@@ -425,23 +425,30 @@ function showDeleteConfirmation(event) {
     });
 
     function calculate() {
-        var subtotal = 0;
-        $('#cart_table tr').each(function() {
-            subtotal += parseInt($(this).find('#total').text())
-        });
-        isNaN(subtotal) ? $('#sub_total').val(0) : $('#sub_total').val(subtotal);
-
-        var grand_total = subtotal;
-        if (isNaN(grand_total)) {
-            $('#grand_total').val(0);
-            $('#grand_total2').text(0);
-        } else {
-            $('#grand_total').val(grand_total);
-            $('#grand_total2').text(grand_total);
+      var subtotal = 0;
+      $('#cart_table tr').each(function() {
+        var rowTotal = parseFloat($(this).find('.total').data('total'));
+        if (!isNaN(rowTotal)) {
+          subtotal += rowTotal;
         }
+      });
 
-        var cash = $('#cash').val();
-        cash != 0 ? $('#change').val(cash - grand_total) : $('#change').val(0);
+      if (isNaN(subtotal)) {
+        subtotal = 0;
+      }
+      $('#sub_total').val(subtotal);
+
+      var grand_total = subtotal;
+      if (isNaN(grand_total)) {
+        $('#grand_total').val(0);
+        $('#grand_total2').text(0);
+      } else {
+        $('#grand_total').val(grand_total);
+        $('#grand_total2').text(grand_total);
+      }
+
+      var cash = $('#cash').val();
+      cash != 0 ? $('#change').val(cash - grand_total) : $('#change').val(0);
     }
 
     $(document).on('keyup mouseup', '#cash', function() {

@@ -87,8 +87,14 @@ class Transaksi extends CI_Controller {
         if(isset($data['process_payment'])) {
             log_message('debug', 'process_payment set'); 
     
+            $id_user = $this->session->userdata('id_user');
             $id_transaksi = $this->Madmin->add_sale($data);
-            $cart = $this->Madmin->get_cart()->result();
+            $cart = $this->Madmin->get_cart($id_user, null)->result();
+            if (empty($cart)) {
+                log_message('error', 'Process payment failed: cart empty for user '.$id_user);
+                echo json_encode(array("success" => false, "message" => "Keranjang kosong"));
+                return;
+            }
             $row = [];
             foreach($cart as $c => $value){
                 array_push($row, array(
