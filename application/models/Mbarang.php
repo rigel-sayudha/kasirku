@@ -5,6 +5,7 @@ class Mbarang extends CI_Model {
     private $table = 'barang';
 public function getNama($id)
 	{
+		
 		$this->db->select('nama_barang, stok');
 		$this->db->where('id_barang', $id);
 		return $this->db->get($this->table)->row();

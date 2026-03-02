@@ -2,6 +2,8 @@
 
 A simple PHP-based point-of-sale (POS) / cashier system.
 
+![Kasirku Web Capture](capture.png)
+
 ## Deskripsi
 
 `Kasirku` adalah aplikasi kasir berbasis PHP (CodeIgniter style) untuk kebutuhan manajemen barang, transaksi, pelanggan, dan laporan. Project ini berisi frontend admin panel dan modul kasir, integrasi pembayaran (Midtrans/veritrans), serta file SQL contoh untuk membuat database.
